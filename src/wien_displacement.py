@@ -36,16 +36,16 @@ def plot_wien_equation():
     # TODO: 添加图例和网格
     
     # TODO: 显示图形
-    x = np.linspace(-1, 6, 100)
-    plt.figure(figsize=(8, 6))
-    plt.plot(x, 5 * np.exp(-x), 'r', label='y = 5 * exp(-x)')
-    plt.plot(x, 5 - x, label='y = 5 - x')
+    x = np.linspace(-1, 6, 100)   #创建数据点
+    plt.figure(figsize=(8, 6))    
+    plt.plot(x, 5 * np.exp(-x), 'r', label='y = 5 * exp(-x)')     #创建图形并设置大小
+    plt.plot(x, 5 - x, label='y = 5 - x')                         #绘制两条曲线
     plt.xlabel('x')
-    plt.ylabel('y')
-    plt.title('Graphical Solution of Wien Equation')
+    plt.ylabel('y')               #设置坐标轴标签
+    plt.title('Graphical Solution of Wien Equation')              #设置标题
     plt.legend()
-    plt.grid(True)
-    plt.show()
+    plt.grid(True)                #添加图例和网络
+    plt.show()                    #显示图形
 
 def wien_equation(x):
     """维恩方程：5e^(-x) + x - 5 = 0
@@ -100,7 +100,7 @@ def calculate_temperature(wavelength, x0=5.0):
 
     if __name__ == "__main__":
     # 绘制方程图像
-    plot_wien_equation()
+     plot_wien_equation()
     
     # 从键盘输入初值
     try:
