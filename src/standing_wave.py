@@ -1,67 +1,97 @@
+
 import numpy as np
 import matplotlib.pyplot as plt
-from matplotlib import animation
+from matplotlib.animation import FuncAnimation
 
-# 任务1：实现波函数 simplewzferpPhi
-def simplewzferpPhi(x, t, A, omega, k):
-    """返回驻波函数值"""
+def sineWaveZeroPhi(x, t, A, omega, k):
+    """
+    实现波函数 y(x, t) = A sin(kx - ωt)
+    
+    参数:
+    x: 位置数组
+    t: 时间
+    A: 振幅
+    omega: 角频率
+    k: 波数
+    
+    返回:
+    y: 对应的y轴数值数组
+    """
     return A * np.sin(k * x - omega * t)
 
-# 创建Figure和Axes
-fig = plt.figure()
-ax = plt.axes(xlim=(0, 10), ylim=(-8, 8))
-ax.set_xlabel("x")
-ax.set_ylabel("y")
-
-# 初始化三条线：两个原始波和驻波
-line1, = ax.plot([], [], lw=2, label='Wave 1')
-line2, = ax.plot([], [], lw=2, label='Wave 2')
-line3, = ax.plot([], [], lw=2, linestyle='--', color='red', label='Standing Wave')
-lines = [line1, line2, line3]
-plt.legend()
-
-# 初始化函数
-def init():
-    for line in lines:
+def create_standing_wave_animation(A=1, omega=2*np.pi, k=2*np.pi, x_max=10, frames=100, interval=50):
+    """
+    创建驻波动画
+    
+    参数:
+    A: 振幅
+    omega: 角频率
+    k: 波数
+    x_max: x轴最大值
+    frames: 动画帧数
+    interval: 帧间隔(毫秒)
+    """
+    # 创建x轴数据
+    x = np.linspace(0, x_max, 500)
+    
+    # 创建两个方向相反的波
+    wave1 = lambda t: sineWaveZeroPhi(x, t, A, omega, k)
+    wave2 = lambda t: sineWaveZeroPhi(x, t, A, omega, -k)  # 反向传播
+    
+    # 驻波是两个波的叠加
+    standing_wave = lambda t: wave1(t) + wave2(t)
+    
+    # 创建图形和轴
+    fig, ax = plt.subplots(figsize=(10, 6))
+    ax.set_xlim(0, x_max)
+    ax.set_ylim(-2*A, 2*A)
+    ax.set_xlabel('Position (x)')
+    ax.set_ylabel('Amplitude (y)')
+    ax.set_title('Standing Wave Animation')
+    
+    # 初始化线条
+    line, = ax.plot([], [], lw=2)
+    line1, = ax.plot([], [], lw=1, alpha=0.5)
+    line2, = ax.plot([], [], lw=1, alpha=0.5)
+    
+    # 初始化函数
+    def init():
         line.set_data([], [])
-    return lines
-
-# 空间变量x
-x = np.linspace(0, 10, 1000)
-
-# 动画更新函数
-def animate(i):
-    A = 4          # 振幅固定为4
-    omega = 2 * np.pi  # 角频率
-    k = np.pi / 2     # 波数
-    t = 0.1 * i      # 时间递增
-
-    # 生成两个方向相反的波
-    y1 = simplewzferpPhi(x, t, A, omega, k)
-    y2 = simplewzferpPhi(x, t, A, -omega, k)  # 负角频率表示反向传播
-
-    # 驻波叠加（相加）
-    y3 = y1 + y2
-
-    # 更新数据
-    lines[0].set_data(x, y1)
-    lines[1].set_data(x, y2)
-    lines[2].set_data(x, y3)
-    return lines
+        line1.set_data([], [])
+        line2.set_data([], [])
+        return line, line1, line2
+    
+    # 更新函数
+    def update(frame):
+        t = frame * 0.1  # 时间步长
+        y = standing_wave(t)
+        y1 = wave1(t)
+        y2 = wave2(t)
+        
+        line.set_data(x, y)
+        line1.set_data(x, y1)
+        line2.set_data(x, y2)
+        
+        return line, line1, line2
+    
+    # 创建动画
+    anim = FuncAnimation(fig, update, frames=frames, init_func=init, 
+                         blit=True, interval=interval)
+    
+    plt.legend(['Standing Wave', 'Wave 1', 'Wave 2'])
+    plt.grid(True)
+    plt.show()
+    
+    return anim
 
 # 运行动画
 if __name__ == "__main__":
-    anim = animation.FuncAnimation(
-        fig, animate, init_func=init,
-        frames=200, interval=50, blit=True
-    )
-    plt.show()
-    # 提示：waveFunctions = [[x, y1], [x, y2], [x, y3]]可以帮助组织数据
-
-    return lines
-if __name__ == '__main__':
-    # TODO: 创建动画对象并显示
-    # 提示：使用animation.FuncAnimation创建动画
-    # 提示：使用plt.show()显示动画
-    pass
-
+    # 设置参数
+    A = 1.0        # 振幅
+    f = 1.0        # 频率 (Hz)
+    omega = 2 * np.pi * f  # 角频率
+    k = 2 * np.pi  # 波数 (假设波长为1)
+    x_max = 10     # x轴范围
+    
+    # 创建动画
+    anim = create_standing_wave_animation(A, omega, k, x_max)
