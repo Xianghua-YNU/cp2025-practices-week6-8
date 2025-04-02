@@ -17,7 +17,7 @@ def maxwell_distribution(v, vp):
     分布函数f(v)的值
     """
     # 在此实现麦克斯韦分布函数
-    return 4 * np.pi * (v ** 2 / vp ** 3) * np.exp(-v ** 2 / vp ** 2)
+    return (4/np.sqrt(np.pi)) * (v**2 / vp**3) * np.exp(-(v**2) / (vp**2))
 
 def percentage_0_to_vp(vp):
     """
