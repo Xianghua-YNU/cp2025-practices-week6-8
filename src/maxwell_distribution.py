@@ -30,7 +30,7 @@ def percentage_0_to_vp(vp):
     百分比值
     """
     # 在此实现0到vp的积分计算
-    result=quad(maxwell_distribution, 0, vp, args=(vp,))
+    result,_=quad(maxwell_distribution, 0, vp, args=(vp,))
     return result * 100
 
 def percentage_0_to_3_3vp(vp):
@@ -44,7 +44,7 @@ def percentage_0_to_3_3vp(vp):
     百分比值
     """
     # 在此实现0到3.3vp的积分计算
-    result=quad(maxwell_distribution, 0, 3.3 * vp, args=(vp,))
+    result,_=quad(maxwell_distribution, 0, 3.3 * vp, args=(vp,))
     return result * 100
 
 def percentage_3e4_to_3e8(vp):
@@ -58,7 +58,7 @@ def percentage_3e4_to_3e8(vp):
     百分比值
     """
     # 在此实现3×10^4到3×10^8的积分计算
-    result=quad(maxwell_distribution, 3 * 10 ** 4, 3 * 10 ** 8, args=(vp,))
+    result,_=quad(maxwell_distribution, 3 * 10 ** 4, 3 * 10 ** 8, args=(vp,))
     return result * 100
 
 def trapezoidal_rule(f, a, b, n):
