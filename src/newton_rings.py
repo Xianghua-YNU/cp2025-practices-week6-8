@@ -70,48 +70,80 @@ if __name__ == "__main__":
 import numpy as np
 import matplotlib.pyplot as plt
 
-def newton_rings_intensity(R, lamda, x, y):
-    r = np.sqrt(x ** 2 + y ** 2)
-    d = R - np.sqrt(R ** 2 - r ** 2)
-    I = 4 * np.sin((2 * np.pi / lamda) * d) ** 2
-    return I
 
-# 参数设置
-R = 1000  # 凸透镜曲率半径
-lamda = 0.0005  # 光的波长
+def setup_parameters():
+    #设置模拟牛顿环所需的参数。
 
-# 生成网格点
-x = np.linspace(-10, 10, 1000)
-y = np.linspace(-10, 10, 1000)
-X, Y = np.meshgrid(x, y)
+    #返回: tuple: 包含激光波长、透镜曲率半径的元组
+    
+    # 氦氖激光波长 (m)
+    lambda_light = 632.8e-9
+    # 透镜曲率半径 (m)
+    R_lens = 0.1
+    return lambda_light, R_lens
 
-# 计算光强分布
-I = newton_rings_intensity(R, lamda, X, Y)
 
-# 绘制牛顿环干涉图样
-plt.imshow(I, cmap='gray', extent=[x.min(), x.max(), y.min(), y.max()])
-plt.xlabel('x')
-plt.ylabel('y')
-plt.title('牛顿环干涉图样')
-plt.show()
+def generate_grid():
+    #生成模拟所需的网格坐标。
 
-# 分析不同参数对干涉图样的影响
-# 改变凸透镜曲率半径
-R_list = [500, 1000, 1500]
-for R in R_list:
-    I = newton_rings_intensity(R, lamda, X, Y)
-    plt.imshow(I, cmap='gray', extent=[x.min(), x.max(), y.min(), y.max()])
-    plt.xlabel('x')
-    plt.ylabel('y')
-    plt.title(f'不同曲率半径 R={R} 时的牛顿环干涉图样')
+    #返回:tuple: 包含网格坐标 X、Y 以及径向距离 r 的元组
+    
+    # 生成 x 和 y 方向的坐标，调整范围至 -0.001 到 0.001，增加点数以提高分辨率
+    x = np.linspace(-0.001, 0.001, 1000)
+    y = np.linspace(-0.001, 0.001, 1000)
+    # 生成网格坐标
+    X, Y = np.meshgrid(x, y)
+    # 计算径向距离
+    r = np.sqrt(X**2 + Y**2)
+    return X, Y, r
+
+
+def calculate_intensity(r, lambda_light, R_lens):
+    #计算干涉强度分布。
+
+    #参数:
+    r (np.ndarray): 径向距离数组
+    lambda_light (float): 激光波长
+    R_lens (float): 透镜曲率半径
+
+    #返回:
+    np.ndarray: 干涉强度分布数组
+    
+    # 计算空气膜厚度
+    d = R_lens - np.sqrt(R_lens**2 - r**2)
+    # 生成干涉强度
+    intensity = 4 * np.sin(2 * np.pi * d / lambda_light)**2
+    return intensity
+
+
+def plot_newton_rings(intensity):
+    
+    #绘制牛顿环干涉条纹图像。
+
+    #参数:
+    intensity (np.ndarray): 干涉强度分布数组
+
+    plt.figure(figsize=(10, 10))
+    # 绘制图像，调整对比度，更新绘图范围
+    plt.imshow(intensity, cmap='gray', extent=(-0.001, 0.001, -0.001, 0.001), vmin=0, vmax=1)
+    # 添加颜色条
+    plt.colorbar(label='Intensity')
+    # 设置标题
+    plt.title("Newton's Rings (Analytical Solution)")
+    # 设置 x 轴标签
+    plt.xlabel("x (m)")
+    # 设置 y 轴标签
+    plt.ylabel("y (m)")
+    # 显示图像
     plt.show()
 
-# 改变光的波长
-lamda_list = [0.0004, 0.0005, 0.0006]
-for lamda in lamda_list:
-    I = newton_rings_intensity(R, lamda, X, Y)
-    plt.imshow(I, cmap='gray', extent=[x.min(), x.max(), y.min(), y.max()])
-    plt.xlabel('x')
-    plt.ylabel('y')
-    plt.title(f'不同波长 λ={lamda} 时的牛顿环干涉图样')
-    plt.show()
+
+if __name__ == "__main__":
+    # 设置参数
+    lambda_light, R_lens = setup_parameters()
+    # 生成网格坐标
+    X, Y, r = generate_grid()
+    # 计算干涉强度分布
+    intensity = calculate_intensity(r, lambda_light, R_lens)
+    # 绘制牛顿环
+    plot_newton_rings(intensity)
