@@ -67,18 +67,31 @@ if __name__ == "__main__":
 
 
 
+import numpy as np
+import matplotlib.pyplot as plt
+
+def newton_rings_intensity(R, lamda, x, y):
+    r = np.sqrt(x ** 2 + y ** 2)
+    d = R - np.sqrt(R ** 2 - r ** 2)
+    I = 4 * np.sin((2 * np.pi / lamda) * d) ** 2
+    return I
+
 # 参数设置
 R = 1000  # 凸透镜曲率半径
 lamda = 0.0005  # 光的波长
-r = np.linspace(0, 10, 1000)  # 圆环半径范围
+
+# 生成网格点
+x = np.linspace(-10, 10, 1000)
+y = np.linspace(-10, 10, 1000)
+X, Y = np.meshgrid(x, y)
 
 # 计算光强分布
-I = newton_rings_intensity(R, lamda, r)
+I = newton_rings_intensity(R, lamda, X, Y)
 
 # 绘制牛顿环干涉图样
-plt.plot(r, I)
-plt.xlabel('圆环半径 r')
-plt.ylabel('光强 I')
+plt.imshow(I, cmap='gray', extent=[x.min(), x.max(), y.min(), y.max()])
+plt.xlabel('x')
+plt.ylabel('y')
 plt.title('牛顿环干涉图样')
 plt.show()
 
@@ -86,23 +99,19 @@ plt.show()
 # 改变凸透镜曲率半径
 R_list = [500, 1000, 1500]
 for R in R_list:
-    I = newton_rings_intensity(R, lamda, r)
-    plt.plot(r, I, label=f'R={R}')
-
-plt.xlabel('圆环半径 r')
-plt.ylabel('光强 I')
-plt.title('不同曲率半径对牛顿环干涉图样的影响')
-plt.legend()
-plt.show()
+    I = newton_rings_intensity(R, lamda, X, Y)
+    plt.imshow(I, cmap='gray', extent=[x.min(), x.max(), y.min(), y.max()])
+    plt.xlabel('x')
+    plt.ylabel('y')
+    plt.title(f'不同曲率半径 R={R} 时的牛顿环干涉图样')
+    plt.show()
 
 # 改变光的波长
 lamda_list = [0.0004, 0.0005, 0.0006]
 for lamda in lamda_list:
-    I = newton_rings_intensity(R, lamda, r)
-    plt.plot(r, I, label=f'λ={lamda}')
-
-plt.xlabel('圆环半径 r')
-plt.ylabel('光强 I')
-plt.title('不同波长对牛顿环干涉图样的影响')
-plt.legend()
-plt.show()
+    I = newton_rings_intensity(R, lamda, X, Y)
+    plt.imshow(I, cmap='gray', extent=[x.min(), x.max(), y.min(), y.max()])
+    plt.xlabel('x')
+    plt.ylabel('y')
+    plt.title(f'不同波长 λ={lamda} 时的牛顿环干涉图样')
+    plt.show()
