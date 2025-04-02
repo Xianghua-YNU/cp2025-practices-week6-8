@@ -76,10 +76,13 @@ def trapezoidal_rule(f, a, b, n):
     """
     # 在此实现梯形积分法则
     h = (b - a) / n
-    x = np.linspace(a, b, n + 1)
-    y = f(x, vp)
-    integral = (h / 2) * (y[0] + 2 * np.sum(y[1:-1]) + y[-1])
-    return integral
+    result = 0.5 * (f(a) + f(b))
+    
+    for i in range(1, n):
+        result += f(a + i * h)
+        
+    result *= h
+    return result
 
 def compare_methods(task_name, quad_func, trap_func, vp, n_values=[10, 100, 1000]):
     """比较quad和梯形积分法的结果和性能"""
