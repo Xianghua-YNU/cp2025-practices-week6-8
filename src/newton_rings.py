@@ -43,7 +43,7 @@ def calculate_intensity(r, lambda_light, R_lens):
 
     #返回:
     #np.ndarray: 干涉强度分布数组
-    # 计算空气膜厚度
+    #计算空气膜厚度
     d = R_lens - np.sqrt(R_lens**2 - r**2)
     # 生成干涉强度
     intensity = 4 * np.sin(2 * np.pi * d / lambda_light)**2
@@ -52,7 +52,6 @@ def calculate_intensity(r, lambda_light, R_lens):
 
 def plot_newton_rings(intensity):
     #绘制牛顿环干涉条纹图像
-
     #参数:
     #intensity (np.ndarray): 干涉强度分布数组
     
