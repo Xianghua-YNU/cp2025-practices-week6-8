@@ -37,9 +37,9 @@ def calculate_intensity(r, lambda_light, R_lens):
     #计算干涉强度分布。
 
     #参数:
-    r (np.ndarray): 径向距离数组
-    lambda_light (float): 激光波长
-    R_lens (float): 透镜曲率半径
+    #r (np.ndarray): 径向距离数组
+    #lambda_light (float): 激光波长
+    #R_lens (float): 透镜曲率半径
 
     #返回:
     #np.ndarray: 干涉强度分布数组
